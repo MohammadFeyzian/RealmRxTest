@@ -1,0 +1,53 @@
+package com.feyzian.mohammad.realmrxtest;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.feyzian.mohammad.realmrxtest.animation.AnimationActivity;
+import com.feyzian.mohammad.realmrxtest.gotchas.GotchasActivity;
+import com.feyzian.mohammad.realmrxtest.retrofit.RetrofitExample;
+import com.feyzian.mohammad.realmrxtest.throttle.ThrottleSearchActivity;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+public class MainActivity extends Activity {
+
+    private ViewGroup container;
+    private final TreeMap<String, Class<? extends Activity>> buttons = new TreeMap<String, Class<? extends Activity>>() {{
+        put("Animation", AnimationActivity.class);
+        put("Throttle search", ThrottleSearchActivity.class);
+        put("Network", RetrofitExample.class);
+        put("Working with Realm", GotchasActivity.class);
+    }};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        container = (ViewGroup) findViewById(R.id.list);
+        setupButtons();
+    }
+
+    private void setupButtons() {
+        for (final Map.Entry<String, Class<? extends Activity>> entry : buttons.entrySet()) {
+            Button button = new Button(this);
+            button.setText(entry.getKey());
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(entry.getValue());
+                }
+            });
+            container.addView(button);
+        }
+    }
+
+    private void startActivity(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(this, activityClass));
+    }
+}
